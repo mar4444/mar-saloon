@@ -1,9 +1,9 @@
-import './App.css'
+import AppRoutes from "./routes"
 
 function App() {
   return (
     <>
-      <h1>Main App!!</h1>
+      <AppRoutes />
     </>
   )
 }
