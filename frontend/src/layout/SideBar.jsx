@@ -10,14 +10,15 @@ const SideBar = () => {
   
   const navItems = [
     { label: 'Dashboard', link: '/', icon: <MdDashboardCustomize /> },
-    { label: 'Products', link: '/Products' , icon: <MdOutlineProductionQuantityLimits /> },
-    { label: 'Users', link: '/Users' , icon: <FaUserCheck /> },
-    { label: 'Orders', link: '/orders' , icon: <FaJediOrder /> },
+    { label: 'Users', link: '/Users' , icon: <MdOutlineProductionQuantityLimits /> },
+    { label: 'Services', link: '/Services' , icon: <FaUserCheck /> },
+    { label: 'Category', link: '/Category' , icon: <FaJediOrder /> },
+    { label: 'New Sale', link: '/Sales' , icon: <IoMdSettings /> },
     { label: 'Settings', link: '/settings' , icon: <IoMdSettings /> },
   ];
 
   return (
-    <aside className='h-screen w-20 md:w-72 sticky top-0 bg-white'>
+    <aside className='h-screen w-20 md:w-72 border-r border-gray-200 sticky top-0 bg-white'>
       <div className='mt-16'>
         {navItems.map((item, index) => (
           <Link 
