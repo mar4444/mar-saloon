@@ -4,7 +4,7 @@ import Layout from '../layout/Layout'
 const Users = () => {
   return (
     <Layout pageTitle="Users">
-      <div className='border border-red-500'>
+      <div className=''>
         <h1>Users</h1>
       </div>
     </Layout>

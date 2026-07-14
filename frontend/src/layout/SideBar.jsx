@@ -9,7 +9,7 @@ import { IoMdSettings } from "react-icons/io";
 const SideBar = () => {
   
   const navItems = [
-    { label: 'Dashboard', link: '/', icon: <MdDashboardCustomize /> },
+    { label: 'Dashboard', link: '/dashboard', icon: <MdDashboardCustomize /> },
     { label: 'Users', link: '/Users' , icon: <MdOutlineProductionQuantityLimits /> },
     { label: 'Services', link: '/Services' , icon: <FaUserCheck /> },
     { label: 'Category', link: '/Category' , icon: <FaJediOrder /> },

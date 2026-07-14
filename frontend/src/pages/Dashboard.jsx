@@ -4,7 +4,7 @@ import Layout from '../layout/Layout'
 const Dashboard = () => {
   return (
     <Layout pageTitle="Dashboard">
-      <div className='border border-red-500'>
+      <div className=''>
         <h1>Dashboard</h1>
       </div>
     </Layout>
