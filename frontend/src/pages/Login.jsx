@@ -1,17 +1,9 @@
-// import React from 'react'
-
-// const Login = () => {
-//   return (
-//     <div className='flex items-center justify-center w-full h-screen bg-green-400'>
-//         <h1>Login</h1>
-//     </div>
-//   )
-// }
-
-// export default Login
-
-
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { schema } from '../utils/schema.js'
+import useAuthStore from "../store/authStore";
+import api from '../utils/api.js'
 import {
   Eye,
   EyeOff,
@@ -21,24 +13,57 @@ import {
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  // const {
+  //       showPassword,
+  //       loading,
+  //       onSubmit,
+  //       // refetch,
+  //   } = useUsers();
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const {
+    loading,
+    error,
+    onSubmit,
+  } = useAuthStore();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+//   const [formData, setFormData] = useState({
+//     email: "",
+//     password: "",
+//   });
 
-    console.log(formData);
-  };
+  const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: yupResolver(schema), });
+
+//   const handleChange = (e) => {
+//     setFormData((prev) => ({
+//       ...prev,
+//       [e.target.name]: e.target.value,
+//     }));
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+
+//     console.log(formData);
+//   };
+
+
+
+// const onSubmit = async (data) => {
+//     try {
+//         setIsLoading(true);
+
+//         const res = await api.post("/api/login", data)
+//         console.log(res.data);
+
+//         sessionStorage.setItem("boardConnect", JSON.stringify(res.data));
+//     } catch (error) {
+//         console.log(error.response?.data?.message || "something went wrong.")
+//     } finally {
+//         setIsLoading(false);
+//     }
+// }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-green-50 p-4">
@@ -54,7 +79,8 @@ const Login = () => {
         </div>
 
         <form
-          onSubmit={handleSubmit}
+        //   onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="space-y-5"
         >
           {/* Email */}
@@ -74,11 +100,13 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
+                // value={formData.email}
+                // onChange={handleChange}
+                {...register("email")}
                 className="w-full px-3 py-3 outline-none"
               />
             </div>
+            <p className="text-red-500 text-sm mb-2">{errors.email?.message}</p>
           </div>
 
           {/* Password */}
@@ -102,16 +130,15 @@ const Login = () => {
                 }
                 name="password"
                 placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
+                // value={formData.password}
+                // onChange={handleChange}
+                {...register("password")}
                 className="w-full px-3 py-3 outline-none"
               />
 
               <button
                 type="button"
-                onClick={() =>
-                  setShowPassword(!showPassword)
-                }
+                onClick={() => setShowPassword(!showPassword)}
                 className="text-gray-500 hover:text-gray-700 cursor-pointer"
               >
                 {showPassword ? (
@@ -121,6 +148,7 @@ const Login = () => {
                 )}
               </button>
             </div>
+            <p className="text-red-500 text-sm mb-2">{errors.password?.message}</p>
           </div>
 
           <div className="flex justify-end">
