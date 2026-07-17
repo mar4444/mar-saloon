@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { schema } from '../utils/schema.js'
 import useAuthStore from "../store/authStore";
 import api from '../utils/api.js'
+import { useToast } from "../context/ToastContext";
 import {
   Eye,
   EyeOff,
@@ -16,6 +17,7 @@ import ErrorMessage from "../components/ErrorMessage.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,10 +31,14 @@ const Login = () => {
   const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: yupResolver(schema), });
 
   const handleLogin = async (data) => {
-    const success = await onSubmit(data);
+    const result = await onSubmit(data);
 
-    if (success) {
+    if (result.success) {
+      // navigate("/dashboard");
+      showToast(result.message, "success");
       navigate("/dashboard");
+    } else {
+      showToast(result.message, "error");
     }
   };
 
@@ -42,7 +48,7 @@ const Login = () => {
       <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-800">
-            Welcome Back
+            Best Saloon
           </h1>
 
           <p className="mt-2 text-gray-500">
