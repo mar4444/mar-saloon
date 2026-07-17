@@ -65,8 +65,39 @@ const useUserStore = create((set) => ({
                 loading: false,
             });
         }
+    },
+
+    deleteUser: async (userId) => {
+        try {
+            set({
+                loading: true,
+                error: "",
+            })
+
+            const res = await api.delete(`/api/delete-user/${userId}`);
+            console.log(res.data);
+            return {
+                success: true,
+                message: res.data.message,
+            }
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";  
+
+            set({
+                error: message,
+            })
+            return {
+                success: false,
+                message,
+            }
+        } finally {
+            set({
+                loading: false,
+            });
+        }   
+        
     }
-    
+
 }));
 
 export default useUserStore;

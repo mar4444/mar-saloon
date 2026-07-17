@@ -5,7 +5,7 @@ import { IoNotifications } from "react-icons/io5";
 
 const Header = ({ pageTitle }) => {
     return (
-        <header className='w-full bg-white sticky top-0 shadow-sm p-4'>
+        <header className='w-full bg-white sticky top-0 z-50 shadow-sm p-4'>
             <div className='flex items-center justify-between'>
                 <div>
                     <h1>{ pageTitle }</h1>
