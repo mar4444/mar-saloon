@@ -16,6 +16,8 @@ const useAuthStore = create((set) => ({
             console.log(res.data);
 
             sessionStorage.setItem("boardConnect", JSON.stringify(res.data));
+            return true // for success
+
         } catch (error) {
             set({
                 error: error.response?.data?.message || "Something went wrong.",
