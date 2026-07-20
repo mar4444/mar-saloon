@@ -3,6 +3,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { LuSettings } from "react-icons/lu";
 import { IoNotifications } from "react-icons/io5";
 import { HiOutlineMenu } from "react-icons/hi";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 
 const Header = ({ pageTitle, sidebarOpen, setSidebarOpen }) => {
     return (
@@ -18,7 +19,7 @@ const Header = ({ pageTitle, sidebarOpen, setSidebarOpen }) => {
             z-30
             ${
             sidebarOpen
-                ? "md:left-72 left-0"
+                ? "md:left-56 left-0"
                 : "left-0"
             }
         `}
@@ -27,9 +28,10 @@ const Header = ({ pageTitle, sidebarOpen, setSidebarOpen }) => {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="text-2xl text-green-600 cursor-pointer"
+                        className="text-2xl text-green-600 cursor-pointer hover:bg-green-100"
                     >
-                        <HiOutlineMenu />
+                        
+                        {sidebarOpen ? (<ChevronLeft />) : (<ChevronRight />)}
                     </button>
 
                     <h1 className="text-xl font-semibold">

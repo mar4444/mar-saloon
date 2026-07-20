@@ -62,6 +62,11 @@ const Users = () => {
     <Layout pageTitle="Users">
       <div className="space-y-6">
 
+        <div className="space-y-1">
+          <h1 className="text-xl font-bold">Users</h1>
+          <p className="text-gray-400 font-semibold">3 Total Users</p>
+        </div>
+
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 justify-between">
 
@@ -75,7 +80,7 @@ const Users = () => {
             <input
               type="text"
               placeholder="Search by name..."
-              className="w-full rounded-lg border pl-10 pr-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -83,7 +88,7 @@ const Users = () => {
 
           {/* Role Filter */}
           <select
-            className="border rounded-lg px-4 py-2 w-full md:w-56"
+            className="border border-gray-200 rounded-lg px-4 py-2 w-full md:w-56 bg-white"
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
@@ -96,9 +101,9 @@ const Users = () => {
 
         {/* Desktop Table */}
         <div className=" bg-white rounded-xl shadow overflow-x-auto">
-          <table className="min-w-212.5 w-full">
-            <thead className="bg-gray-100">
-              <tr className="text-left">
+          <table className="min-w-212.5 w-full border border-gray-100">
+            <thead className="bg-green-50">
+              <tr className="text-left text-gray-400 text-sm">
                 <th className="p-4">Name</th>
                 <th className="p-4">Email</th>
                 <th className="p-4">Phone</th>
@@ -111,7 +116,7 @@ const Users = () => {
               {filteredUsers.map((user) => (
                 <tr
                   key={user.id}
-                  className="border-t hover:bg-gray-50"
+                  className="border-t border-gray-200 hover:bg-gray-50"
                 >
                   <td className="p-4">{user.name}</td>
 

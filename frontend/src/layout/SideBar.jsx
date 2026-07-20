@@ -6,6 +6,7 @@ import { FaUserCheck } from "react-icons/fa";
 import { FaJediOrder } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 
+
 const SideBar = ({ sidebarOpen, setSidebarOpen }) => {
   
   const navItems = [
@@ -32,7 +33,8 @@ const SideBar = ({ sidebarOpen, setSidebarOpen }) => {
         top-0
         left-0
         h-screen
-        w-72
+        px-3
+        w-56
         bg-white
         border-r
         border-gray-200

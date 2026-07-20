@@ -15,7 +15,7 @@ const Layout = ({
         <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <div className={`transition-all duration-300 ${
-            sidebarOpen ? "md:ml-72" : "ml-0"
+            sidebarOpen ? "md:ml-56" : "ml-0"
           }`}
         >
           <Header pageTitle={pageTitle} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
