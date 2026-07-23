@@ -2,20 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MdDashboardCustomize } from "react-icons/md";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
-import { FaUserCheck } from "react-icons/fa";
+import { FaUserCheck, FaHistory  } from "react-icons/fa";
 import { FaJediOrder } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
-
+import { FcSalesPerformance } from "react-icons/fc";
 
 const SideBar = ({ sidebarOpen, setSidebarOpen }) => {
   
   const navItems = [
     { label: 'Dashboard', link: '/dashboard', icon: <MdDashboardCustomize /> },
-    { label: 'Users', link: '/Users' , icon: <MdOutlineProductionQuantityLimits /> },
-    { label: 'Services', link: '/Services' , icon: <FaUserCheck /> },
-    { label: 'Category', link: '/Category' , icon: <FaJediOrder /> },
-    { label: 'New Sale', link: '/Sales' , icon: <IoMdSettings /> },
-    { label: 'Settings', link: '/settings' , icon: <IoMdSettings /> },
+    { label: 'Users', link: '/users' , icon: <MdOutlineProductionQuantityLimits /> },
+    { label: 'Features', link: '/features' , icon: <FaUserCheck /> },
+    { label: 'New Sale', link: '/new-sales' , icon: <FcSalesPerformance /> },
+    { label: 'Sales History', link: '/sales-history' , icon: <FaHistory /> },
+    { label: 'Settings', link: '/setting' , icon: <IoMdSettings /> },
   ];
 
   return (

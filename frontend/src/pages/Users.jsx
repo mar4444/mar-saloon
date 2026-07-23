@@ -1,17 +1,3 @@
-// import React, { useEffect, useState } from 'react'
-// import Layout from '../layout/Layout'
-// import api from '../utils/api.js'
-
-// const Users = () => {
-//   return (
-//     <Layout pageTitle="Users">
-      
-//     </Layout>
-//   )
-// }
-
-// export default Users
-
 import React, { useState } from "react";
 import Layout from "../layout/Layout";
 import { FiMoreVertical, FiSearch } from "react-icons/fi";
@@ -120,9 +106,9 @@ const Users = () => {
                 >
                   <td className="p-4">{user.name}</td>
 
-                  <td className="p-4">{user.email}</td>
+                  <td className="p-4 text-gray-600">{user.email}</td>
 
-                  <td className="p-4">{user.phone}</td>
+                  <td className="p-4 text-gray-600">{user.phone}</td>
 
                   <td className="p-4">
                     <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
