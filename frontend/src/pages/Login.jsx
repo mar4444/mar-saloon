@@ -22,11 +22,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    loading,
-    error,
-    onSubmit,
-  } = useAuthStore();
+  const { loading, error, onSubmit } = useAuthStore();
 
   const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: yupResolver(schema), });
 

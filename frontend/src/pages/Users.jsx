@@ -1,51 +1,68 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../layout/Layout";
 import { FiMoreVertical, FiSearch } from "react-icons/fi";
+import useUserStore from "../store/userStore";
+import UsersSkeleton from "../components/skeletons/UsersSkeleton";
+import Pagination from "../components/Pagination";
 
-const dummyUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@gmail.com",
-    phone: "0788000001",
-    role: "Admin",
-    verified: true,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@gmail.com",
-    phone: "0788000002",
-    role: "Receptionist",
-    verified: false,
-  },
-  {
-    id: 3,
-    name: "Martin",
-    email: "martin@gmail.com",
-    phone: "0788000003",
-    role: "Barber",
-    verified: true,
-  },
-];
+// const dummyUsers = [
+//   {
+//     id: 1,
+//     name: "John Doe",
+//     email: "john@gmail.com",
+//     phone: "0788000001",
+//     role: "Admin",
+//     verified: true,
+//   },
+//   {
+//     id: 2,
+//     name: "Jane Smith",
+//     email: "jane@gmail.com",
+//     phone: "0788000002",
+//     role: "Receptionist",
+//     verified: false,
+//   },
+//   {
+//     id: 3,
+//     name: "Martin",
+//     email: "martin@gmail.com",
+//     phone: "0788000003",
+//     role: "Barber",
+//     verified: true,
+//   },
+// ];
 
 const Users = () => {
-  const [search, setSearch] = useState("");
-  const [role, setRole] = useState("");
+  // const [search, setSearch] = useState("");
+  // const [role, setRole] = useState("");
   const [menuOpen, setMenuOpen] = useState(null);
 
-  const filteredUsers = dummyUsers.filter((user) => {
-    const matchSearch = user.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  // const filteredUsers = dummyUsers.filter((user) => {
+  //   const matchSearch = user.name
+  //     .toLowerCase()
+  //     .includes(search.toLowerCase());
 
-    const matchRole = role === "" || user.role === role;
+  //   const matchRole = role === "" || user.role === role;
 
-    return matchSearch && matchRole;
-  });
+  //   return matchSearch && matchRole;
+  // });
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(2)
+  const [role, setRole] = useState("")
+  const [search, setSearch] = useState("")
+  // const [totalPages, setTotalPages] = useState(1);
+
+  const { users, loading, error, totalPages, loadingUsers, getAllUsers } = useUserStore();
+
+  useEffect(() => {
+    getAllUsers(page, limit, role, search);
+  }, [page, role, search]);
 
   return (
     <Layout pageTitle="Users">
+      {loadingUsers && <UsersSkeleton />}
+
       <div className="space-y-6">
 
         <div className="space-y-1">
@@ -68,7 +85,10 @@ const Users = () => {
               placeholder="Search by name..."
               className="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value)
+                setPage(1)
+              }}
             />
           </div>
 
@@ -76,12 +96,16 @@ const Users = () => {
           <select
             className="border border-gray-200 rounded-lg px-4 py-2 w-full md:w-56 bg-white"
             value={role}
-            onChange={(e) => setRole(e.target.value)}
+            onChange={(e) => {
+              setRole(e.target.value)
+              setPage(1);
+            }}
+            
           >
             <option value="">All Roles</option>
-            <option>Admin</option>
-            <option>Barber</option>
-            <option>Receptionist</option>
+            <option value="admin">Admin</option>
+            <option value="barber">Barber</option>
+            <option value="barber">Receptionist</option>
           </select>
         </div>
 
@@ -99,9 +123,9 @@ const Users = () => {
             </thead>
 
             <tbody>
-              {filteredUsers.map((user) => (
+              {users.map((user) => (
                 <tr
-                  key={user.id}
+                  // key={user.id}
                   className="border-t border-gray-200 hover:bg-gray-50"
                 >
                   <td className="p-4">{user.name}</td>
@@ -118,16 +142,16 @@ const Users = () => {
 
                   <td className="p-4 text-center relative">
                     <button
-                      onClick={() =>
-                        setMenuOpen(
-                          menuOpen === user.id ? null : user.id
-                        )
-                      }
+                      // onClick={() =>
+                      //   setMenuOpen(
+                      //     menuOpen === user.id ? null : user.id
+                      //   )
+                      // }
                     >
                       <FiMoreVertical size={20} />
                     </button>
 
-                    {menuOpen === user.id && (
+                    {/* {menuOpen === user.id && (
                       <div className="absolute right-10 top-12 w-40 bg-white shadow-lg rounded-lg border z-50">
                         <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                           View Details
@@ -137,12 +161,12 @@ const Users = () => {
                           Delete
                         </button>
                       </div>
-                    )}
+                    )} */}
                   </td>
                 </tr>
               ))}
 
-              {filteredUsers.length === 0 && (
+              {/* {filteredUsers.length === 0 && (
                 <tr>
                   <td
                     colSpan={5}
@@ -151,9 +175,16 @@ const Users = () => {
                     No users found.
                   </td>
                 </tr>
-              )}
+              )} */}
             </tbody>
           </table>
+
+          {/* Pagination */}
+          <Pagination 
+            page={page} 
+            totalPages={totalPages} 
+            onPageChange={setPage}
+          />
         </div>
       </div>
     </Layout>

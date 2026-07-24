@@ -115,7 +115,7 @@ const Dashboard = () => {
         <div>
 
           <h3 className="text-xl font-semibold mb-5">
-            Barber Report
+            Barber Report Today
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

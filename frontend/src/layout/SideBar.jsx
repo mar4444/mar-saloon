@@ -1,13 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { MdDashboardCustomize } from "react-icons/md";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FaUserCheck, FaHistory  } from "react-icons/fa";
 import { FaJediOrder } from "react-icons/fa6";
 import { IoMdSettings } from "react-icons/io";
 import { FcSalesPerformance } from "react-icons/fc";
+import { useNavigate } from "react-router-dom";
 
 const SideBar = ({ sidebarOpen, setSidebarOpen }) => {
+
+  const navigate = useNavigate();
+
+  const token = JSON.parse(sessionStorage.getItem("boardConnect"))?.token;
+
+  if (!token) {
+    return <Navigate to="/" replace />;
+  }
   
   const navItems = [
     { label: 'Dashboard', link: '/dashboard', icon: <MdDashboardCustomize /> },

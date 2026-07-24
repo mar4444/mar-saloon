@@ -4,6 +4,9 @@ import api from '../utils/api.js'
 const useUserStore = create((set) => ({
     loading: false,
     error: "",
+    users: [],
+    loadingUsers: false,
+    totalPages: 1,
 
     onSubmit: async (data) => {
         try {
@@ -37,18 +40,32 @@ const useUserStore = create((set) => ({
         }
     },
 
-    getAllUsers: async () => {
+    getAllUsers: async (page, limit, role, search) => {
         try {
             set({
                 loading: true,
+                loadingUsers: true,
                 error: "",
             })
 
-            const res = await api.get("/api/all-users");
-            console.log(res.data);
+            const res = await api.get("/api/allUsers", {
+                params: {
+                   page,
+                   limit,
+                   role,
+                   search,
+                }
+            });
+            set({ 
+                users: res.data.data, 
+                totalPages: res.data.totalPages
+            })
+
+            console.log(res.data.data);
+
             return {
                 success: true,
-                data: res.data.data,
+                message: res.data.message,
             }
         } catch (error) {
             const message = error.response?.data?.message || "Something went wrong";
@@ -63,6 +80,7 @@ const useUserStore = create((set) => ({
         } finally {
             set({
                 loading: false,
+                loadingUsers: false,
             });
         }
     },
