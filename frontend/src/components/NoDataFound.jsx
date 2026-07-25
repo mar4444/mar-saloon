@@ -5,7 +5,7 @@ const NoDataFound = ({
   message = "There are no items to display.",
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+    <div className="w-full flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
       <Inbox
         size={56}
         className="mb-4 text-gray-400"

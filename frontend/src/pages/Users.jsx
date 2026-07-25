@@ -4,116 +4,87 @@ import { FiMoreVertical, FiSearch } from "react-icons/fi";
 import useUserStore from "../store/userStore";
 import UsersSkeleton from "../components/skeletons/UsersSkeleton";
 import Pagination from "../components/Pagination";
-
-// const dummyUsers = [
-//   {
-//     id: 1,
-//     name: "John Doe",
-//     email: "john@gmail.com",
-//     phone: "0788000001",
-//     role: "Admin",
-//     verified: true,
-//   },
-//   {
-//     id: 2,
-//     name: "Jane Smith",
-//     email: "jane@gmail.com",
-//     phone: "0788000002",
-//     role: "Receptionist",
-//     verified: false,
-//   },
-//   {
-//     id: 3,
-//     name: "Martin",
-//     email: "martin@gmail.com",
-//     phone: "0788000003",
-//     role: "Barber",
-//     verified: true,
-//   },
-// ];
+import ErrorMessage from "../components/ErrorMessage";
+import NoDataFound from "../components/NoDataFound";
 
 const Users = () => {
-  // const [search, setSearch] = useState("");
-  // const [role, setRole] = useState("");
   const [menuOpen, setMenuOpen] = useState(null);
 
-  // const filteredUsers = dummyUsers.filter((user) => {
-  //   const matchSearch = user.name
-  //     .toLowerCase()
-  //     .includes(search.toLowerCase());
-
-  //   const matchRole = role === "" || user.role === role;
-
-  //   return matchSearch && matchRole;
-  // });
-
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2)
-  const [role, setRole] = useState("")
-  const [search, setSearch] = useState("")
-  // const [totalPages, setTotalPages] = useState(1);
+  const [limit] = useState(2);
+  const [role, setRole] = useState("");
+  const [search, setSearch] = useState("");
 
-  const { users, loading, error, totalPages, loadingUsers, getAllUsers } = useUserStore();
+  const {
+    users,
+    error,
+    totalPages,
+    loadingUsers,
+    getAllUsers,
+  } = useUserStore();
 
   useEffect(() => {
     getAllUsers(page, limit, role, search);
-  }, [page, role, search]);
+  }, [page, limit, role, search]);
 
   return (
     <Layout pageTitle="Users">
-      {loadingUsers && <UsersSkeleton />}
-
       <div className="space-y-6">
 
+        {/* Header */}
         <div className="space-y-1">
           <h1 className="text-xl font-bold">Users</h1>
-          <p className="text-gray-400 font-semibold">3 Total Users</p>
+          <p className="text-gray-400 font-semibold">
+            {users.length} Total Users
+          </p>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="flex flex-col md:flex-row justify-between gap-4">
 
           {/* Search */}
           <div className="relative w-full md:max-w-sm">
             <FiSearch
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
             />
 
             <input
               type="text"
               placeholder="Search by name..."
-              className="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
               value={search}
               onChange={(e) => {
-                setSearch(e.target.value)
-                setPage(1)
+                setSearch(e.target.value);
+                setPage(1);
               }}
+              className="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Role Filter */}
           <select
-            className="border border-gray-200 rounded-lg px-4 py-2 w-full md:w-56 bg-white"
             value={role}
             onChange={(e) => {
-              setRole(e.target.value)
+              setRole(e.target.value);
               setPage(1);
             }}
-            
+            className="w-full md:w-56 rounded-lg border border-gray-300 bg-white px-4 py-2"
           >
             <option value="">All Roles</option>
             <option value="admin">Admin</option>
             <option value="barber">Barber</option>
-            <option value="barber">Receptionist</option>
+            <option value="Receptionist">Receptionist</option>
           </select>
+
         </div>
 
-        {/* Desktop Table */}
-        <div className=" bg-white rounded-xl shadow overflow-x-auto">
-          <table className="min-w-212.5 w-full border border-gray-100">
+        {/* Table */}
+        <div className="overflow-x-auto rounded-xl bg-white shadow">
+
+          <table className="min-w-[850px] w-full border border-gray-100">
+
             <thead className="bg-green-50">
-              <tr className="text-left text-gray-400 text-sm">
+              <tr className="text-left text-sm text-gray-500">
                 <th className="p-4">Name</th>
                 <th className="p-4">Email</th>
                 <th className="p-4">Phone</th>
@@ -123,69 +94,112 @@ const Users = () => {
             </thead>
 
             <tbody>
-              {users.map((user) => (
-                <tr
-                  // key={user.id}
-                  className="border-t border-gray-200 hover:bg-gray-50"
-                >
-                  <td className="p-4">{user.name}</td>
+              {loadingUsers ? (
 
-                  <td className="p-4 text-gray-600">{user.email}</td>
-
-                  <td className="p-4 text-gray-600">{user.phone}</td>
-
-                  <td className="p-4">
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                      {user.role}
-                    </span>
-                  </td>
-
-                  <td className="p-4 text-center relative">
-                    <button
-                      // onClick={() =>
-                      //   setMenuOpen(
-                      //     menuOpen === user.id ? null : user.id
-                      //   )
-                      // }
-                    >
-                      <FiMoreVertical size={20} />
-                    </button>
-
-                    {/* {menuOpen === user.id && (
-                      <div className="absolute right-10 top-12 w-40 bg-white shadow-lg rounded-lg border z-50">
-                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                          View Details
-                        </button>
-
-                        <button className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-50">
-                          Delete
-                        </button>
-                      </div>
-                    )} */}
+                <tr>
+                  <td colSpan={5}>
+                    <UsersSkeleton />
                   </td>
                 </tr>
-              ))}
 
-              {/* {filteredUsers.length === 0 && (
+              ) :error ? (
+
+                <tr>
+                  <td colSpan={5}>
+                    <ErrorMessage message={error} />
+                  </td>
+                </tr>
+
+              ) : users.length === 0 ? (
+
                 <tr>
                   <td
                     colSpan={5}
-                    className="text-center py-8 text-gray-500"
+                    className="py-16"
                   >
-                    No users found.
+                    <NoDataFound
+                      title="No user found"
+                      message="Try changing your search or filters."
+                    />
                   </td>
                 </tr>
-              )} */}
+
+              ) : (
+
+                users.map((user) => (
+
+                  <tr
+                    key={user.id}
+                    className="border-t border-gray-200 hover:bg-gray-50"
+                  >
+
+                    <td className="p-4">
+                      {user.name}
+                    </td>
+
+                    <td className="p-4 text-gray-600">
+                      {user.email}
+                    </td>
+
+                    <td className="p-4 text-gray-600">
+                      {user.phone}
+                    </td>
+
+                    <td className="p-4">
+                      <span className="rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700">
+                        {user.role}
+                      </span>
+                    </td>
+
+                    <td className="relative p-4 text-center">
+
+                      <button
+                        onClick={() =>
+                          setMenuOpen(
+                            menuOpen === user.id ? null : user.id
+                          )
+                        }
+                      >
+                        <FiMoreVertical size={20} />
+                      </button>
+
+                      {menuOpen === user.id && (
+                        <div className="absolute right-10 top-12 z-50 w-40 rounded-lg border bg-white shadow-lg">
+
+                          <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                            View Details
+                          </button>
+
+                          <button className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50">
+                            Delete
+                          </button>
+
+                        </div>
+                      )}
+
+                    </td>
+
+                  </tr>
+
+                ))
+
+              )}
+
             </tbody>
+
           </table>
 
           {/* Pagination */}
-          <Pagination 
-            page={page} 
-            totalPages={totalPages} 
-            onPageChange={setPage}
-          />
+          {users.length > 0 && (
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          )}
+
         </div>
+
       </div>
     </Layout>
   );

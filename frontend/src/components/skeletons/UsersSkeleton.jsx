@@ -4,23 +4,6 @@ const UsersSkeleton = () => {
   return (
     <div className="space-y-6 animate-pulse">
 
-      {/* Header */}
-      <div className="space-y-2">
-        <div className="h-7 w-32 rounded bg-gray-200"></div>
-        <div className="h-4 w-28 rounded bg-gray-200"></div>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col md:flex-row justify-between gap-4">
-
-        {/* Search */}
-        <div className="h-10 w-full md:max-w-sm rounded-lg bg-gray-200"></div>
-
-        {/* Select */}
-        <div className="h-10 w-full md:w-56 rounded-lg bg-gray-200"></div>
-
-      </div>
-
       {/* Table */}
       <div className="bg-white rounded-xl shadow overflow-x-auto">
         <table className="min-w-[850px] w-full border border-gray-100">
@@ -39,7 +22,7 @@ const UsersSkeleton = () => {
           {/* Table Body */}
           <tbody>
 
-            {Array.from({ length: 6 }).map((_, row) => (
+            {Array.from({ length: 3 }).map((_, row) => (
               <tr
                 key={row}
                 className="border-t border-gray-100"
