@@ -102,7 +102,7 @@ const Users = () => {
                   </td>
                 </tr>
 
-              ) :error ? (
+              ) : error ? (
 
                 <tr>
                   <td colSpan={5}>
@@ -152,7 +152,6 @@ const Users = () => {
                     </td>
 
                     <td className="relative p-4 text-center">
-
                       <button
                         onClick={() =>
                           setMenuOpen(
@@ -176,7 +175,6 @@ const Users = () => {
 
                         </div>
                       )}
-
                     </td>
 
                   </tr>

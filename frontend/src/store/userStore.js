@@ -16,7 +16,7 @@ const useUserStore = create((set) => ({
             })
 
             const res = await api.post("/api/register", data);
-            console.log(res.data);
+            // console.log(res.data);
 
             // return true // for success
             return {
@@ -61,7 +61,7 @@ const useUserStore = create((set) => ({
                 totalPages: res.data.totalPages
             })
 
-            console.log(res.data.data);
+            // console.log(res.data.data);
 
             return {
                 success: true,

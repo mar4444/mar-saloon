@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import Layout from "../layout/Layout";
 import useSalesStore from "../store/salesStore";
 import Pagination from "../components/Pagination";
+import SalesSkeleton from "../components/skeletons/SalesSkeleton";
+import ErrorMessage from "../components/ErrorMessage";
+import NoDataFound from "../components/NoDataFound";
+import { FiMoreVertical, FiSearch } from "react-icons/fi";
 
 const SalesHistory = () => {
   const { loading, error, sales, loadingSales, totalPages, getAllSales } = useSalesStore();
@@ -15,23 +19,11 @@ const SalesHistory = () => {
 
   const [tab, setTab] = useState("");
 
+  const [menuOpen, setMenuOpen] = useState(null);
+
   useEffect(() => {
     getAllSales(page, limit, start, end, service, barber)
   }, [page, limit, start, end, service, barber]);
-
-  // Today sales
-//   const handleToday = () => {
-//     const today = new Date();
-
-//     const date = today.toISOString().split("T")[0];
-
-//     setStart(date);
-//     setEnd(date);
-
-//     setPage(1);
-
-//     console.log(date)
-// };
 
 const handleToday = () => {
   const today = new Date().toISOString().split("T")[0];
@@ -42,22 +34,6 @@ const handleToday = () => {
 
   console.log(today)
 };
-
-//Yesterday sales
-// const handleYesterday = () => {
-//     const yesterday = new Date();
-
-//     yesterday.setDate(yesterday.getDate() - 1);
-
-//     const date = yesterday.toISOString().split("T")[0];
-
-//     setStart(date);
-//     setEnd(date);
-
-//     setPage(1);
-
-//     console.log(date)
-// };
 
 const handleYesterday = () => {
   const yesterday = new Date();
@@ -125,7 +101,7 @@ const handleThisMonth = () => {
             Sales History
           </h2>
 
-          <p className="text-gray-400 font-semibold">45 Total sales</p>
+          <p className="text-gray-400 font-semibold">{sales.length}</p>
         </div>
 
         {/* Filters */}
@@ -137,6 +113,11 @@ const handleThisMonth = () => {
             <div>
               <input
                 type="text"
+                value={barber}
+                onChange={(e) => {
+                  setBarber(e.target.value);
+                  setPage(1);
+                }}
                 placeholder="Search by barber..."
                 className="w-full border border-gray-300 rounded-md px-4 py-1 outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -147,8 +128,17 @@ const handleThisMonth = () => {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {/* Service */}
                 <div className="">
-                    <select className="w-full border border-gray-100 bg-white rounded-md px-4 py-1 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500">
-                        <option>All Services</option>
+                    <select 
+                      value={service}
+                      onChange={(e) => {
+                        setService(e.target.value);
+                        setPage(1);
+                      }}
+                      className="w-full border border-gray-100 bg-white rounded-md px-4 py-1 cursor-pointer outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">All Services</option>
+                        <option value="Hair Cut">Hair Cut</option>
+                        <option value="Beard">Beard</option>
                     </select>
                 </div>
 
@@ -176,9 +166,6 @@ const handleThisMonth = () => {
                 </button>
 
                 <button
-                  // onClick={handleThisWeek} 
-                  // className="border border-gray-100 rounded-md py-1 bg-white hover:bg-blue-50 cursor-pointer"
-
                   onClick={() => {
                     handleThisWeek();
                     setTab("Week")
@@ -190,8 +177,6 @@ const handleThisMonth = () => {
                 </button>
 
                 <button 
-                  // onClick={handleThisMonth}
-                  // className="border border-gray-100 rounded-md py-1 bg-white hover:bg-blue-50 cursor-pointer"
                   onClick={() => {
                     handleThisMonth();
                     setTab("Month")
@@ -230,32 +215,40 @@ const handleThisMonth = () => {
                   <th className="p-4">
                     Created At
                   </th>
+                  <th className="p-4">
+                    Action
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
+                {loadingSales ? (
+                  <tr>
+                  <td colSpan={5}>
+                    <SalesSkeleton rows={2} />
+                  </td>
+                </tr>
+                ) : error ? (
+                  <tr>
+                  <td colSpan={5}>
+                    <ErrorMessage message={error} />
+                  </td>
+                </tr>
+                ) : sales.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="py-16"
+                    >
+                      <NoDataFound
+                        title="No user found"
+                        message="Try changing your search or filters."
+                      />
+                    </td>
+                </tr>
 
-                {/* <tr className="border-t border-gray-200 hover:bg-gray-50">
-                  <td className="p-4">
-                    John Doe
-                  </td>
-                  <td className="p-4 text-gray-600">
-                    Hair Cut
-                  </td>
-                  <td className="p-4 text-gray-600">
-                    10,000 RWF
-                  </td>
-                  <td className="p-4">
-                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                      PAID
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    22 Jul 2026
-                  </td>
-                </tr> */}
-
-                {sales.map((sale) => (
+                ) : (
+                  sales.map((sale) => (
                   <tr 
                     key={sale.id}
                     className="border-t border-gray-200 hover:bg-gray-50"
@@ -279,8 +272,60 @@ const handleThisMonth = () => {
                     <td className="p-4 text-gray-500">
                       {new Date(sale.createdAt).toLocaleString()}
                     </td>
+
+                    <td className="relative p-4 text-center">
+                      <button
+                        onClick={() =>
+                          setMenuOpen(
+                            menuOpen === sale.id ? null : sale.id
+                          )
+                        }
+                      >
+                        <FiMoreVertical size={20} />
+                      </button>
+
+                      {menuOpen === sale.id && (
+                        <div className="absolute right-10 top-12 z-50 w-40 rounded-lg border bg-white shadow-lg">
+
+                          <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                            View Details
+                          </button>
+
+                          <button className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50">
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </td>
+
+                    {/* <td className="relative p-4 text-center">
+                      <button
+                        onClick={() =>
+                          setMenuOpen(
+                            menuOpen === sale.id ? null : sale.id
+                          )
+                        }
+                      >
+                        <FiMoreVertical size={20} />
+                      </button>
+
+                      {menuOpen === sale.id && (
+                        <div className="absolute right-10 top-12 z-50 w-40 rounded-lg border bg-white shadow-lg">
+
+                          <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                            View Details
+                          </button>
+
+                          <button className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50">
+                            Delete
+                          </button>
+
+                        </div>
+                      )}
+                    </td> */}
                   </tr>
-                ))}
+                ))
+                )}
               </tbody>
 
             </table>
@@ -288,8 +333,6 @@ const handleThisMonth = () => {
           </div>
 
           {/* Pagination */}
-          {/* <Pagination /> */}
-
           {sales.length > 0 && (
             <Pagination
               page={page}
@@ -297,35 +340,6 @@ const handleThisMonth = () => {
               onPageChange={setPage}
             />
           )}
-
-          {/* <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-6 py-4 border-t">
-
-            <p className="text-sm text-gray-500">
-              Showing 1–10 of 52 sales
-            </p>
-
-            <div className="flex gap-2">
-
-              <button className="border px-4 py-1 rounded-lg cursor-pointer">
-                Previous
-              </button>
-
-              <button className="bg-green-600 text-white px-4 py-1 rounded-lg cursor-pointer">
-                1
-              </button>
-
-              <button className="border px-4 py-1 rounded-lg cursor-pointer">
-                2
-              </button>
-
-              <button className="border px-4 py-1 rounded-lg cursor-pointer">
-                Next
-              </button>
-
-            </div>
-
-          </div> */}
-
         </div>
 
       </div>
