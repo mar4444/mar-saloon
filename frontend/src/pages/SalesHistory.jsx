@@ -6,9 +6,12 @@ import SalesSkeleton from "../components/skeletons/SalesSkeleton";
 import ErrorMessage from "../components/ErrorMessage";
 import NoDataFound from "../components/NoDataFound";
 import { FiMoreVertical, FiSearch } from "react-icons/fi";
+import Modal from "../components/Modal";
+import ViewSalesModal from "../sales/ViewSalesModal";
+import UpdateSaleModal from "../sales/UpdateSaleModal";
 
 const SalesHistory = () => {
-  const { loading, error, sales, loadingSales, totalPages, getAllSales } = useSalesStore();
+  const { loading, error, sales, loadingSales, totalPages, getAllSales, updateSale } = useSalesStore();
 
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(3);
@@ -20,6 +23,11 @@ const SalesHistory = () => {
   const [tab, setTab] = useState("");
 
   const [menuOpen, setMenuOpen] = useState(null);
+
+  const [selectedSale, setSelectedSale] = useState(null);
+
+  const [viewModal, setViewModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
 
   useEffect(() => {
     getAllSales(page, limit, start, end, service, barber)
@@ -90,6 +98,17 @@ const handleThisMonth = () => {
     console.log(endDate)
 };
 
+const openViewModal = (id) => {
+    setViewModal(true)
+    setSelectedSale(id);
+    setMenuOpen(null);
+  }
+
+const updateSaleModal = (id) => {
+  setUpdateModal(true)
+  setSelectedSale(id);
+  setMenuOpen(null);
+}
 
   return (
     <Layout pageTitle="Sales History">
@@ -275,6 +294,7 @@ const handleThisMonth = () => {
 
                     <td className="relative p-4 text-center">
                       <button
+                        className="cursor-pointer"
                         onClick={() =>
                           setMenuOpen(
                             menuOpen === sale.id ? null : sale.id
@@ -287,42 +307,32 @@ const handleThisMonth = () => {
                       {menuOpen === sale.id && (
                         <div className="absolute right-10 top-12 z-50 w-40 rounded-lg border bg-white shadow-lg">
 
-                          <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                          <button 
+                            onClick={() => {
+                              openViewModal(sale.id)
+                            }}
+                            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                          >
                             View Details
                           </button>
 
-                          <button className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50">
+                          <button 
+                            onClick={() => {
+                              updateSaleModal(sale.id)
+                            }}
+                            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                          >
+                            Update
+                          </button>
+
+                          <button 
+                            className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"
+                          >
                             Delete
                           </button>
                         </div>
                       )}
                     </td>
-
-                    {/* <td className="relative p-4 text-center">
-                      <button
-                        onClick={() =>
-                          setMenuOpen(
-                            menuOpen === sale.id ? null : sale.id
-                          )
-                        }
-                      >
-                        <FiMoreVertical size={20} />
-                      </button>
-
-                      {menuOpen === sale.id && (
-                        <div className="absolute right-10 top-12 z-50 w-40 rounded-lg border bg-white shadow-lg">
-
-                          <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
-                            View Details
-                          </button>
-
-                          <button className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50">
-                            Delete
-                          </button>
-
-                        </div>
-                      )}
-                    </td> */}
                   </tr>
                 ))
                 )}
@@ -341,6 +351,30 @@ const handleThisMonth = () => {
             />
           )}
         </div>
+
+        {viewModal && selectedSale && (
+          <Modal 
+            isOpen={viewModal} 
+            title="Sale Details" 
+            onClose={() =>setViewModal(false)}
+          >
+            <ViewSalesModal id={selectedSale} />
+          </Modal>
+          
+        )}
+
+        {updateModal && selectedSale && (
+          <Modal 
+            isOpen={updateModal} 
+            title="Update Sale" 
+            onClose={() =>setUpdateModal(false)}
+          >
+            {/* <ViewSalesModal id={selectedSale} /> */}
+            <UpdateSaleModal
+              id={selectedSale}
+            />
+          </Modal>
+        )}
 
       </div>
     </Layout>

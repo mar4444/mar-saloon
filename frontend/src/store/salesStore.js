@@ -7,6 +7,7 @@ const useSalesStore = create((set) => ({
     sales: [],
     loadingSales: false,
     totalPages: 1,
+    sale: {},
 
     getAllSales: async (page, limit, start, end, service, barber) => {
         try {
@@ -41,6 +42,33 @@ const useSalesStore = create((set) => ({
             set({
                 loading: false,
                 loadingSales: false,
+            });
+        }
+    },
+
+    getSaleById: async (id) => {
+        try {
+            set({
+                loading: true,
+                error: "",
+            })
+
+            const res = await api.get(`/api/saleById/${id}`);
+
+            set({
+                sale: res.data.data,
+            })
+
+            return res.data.data;
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";
+
+            set({
+                error: message,
+            })
+        } finally {
+            set({
+                loading: false,
             });
         }
     },

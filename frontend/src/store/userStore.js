@@ -114,8 +114,49 @@ const useUserStore = create((set) => ({
             });
         }   
         
-    }
+    },
 
+    getAllBarbersUsers: async () => {
+        try {
+            set({
+                loading: true,
+                loadingUsers: true,
+                error: "",
+            })
+
+            const res = await api.get("/api/allUsers", {
+                params: {
+                   role: "barber",
+                }
+            });
+
+            set({
+                users: res.data.data,
+            })
+
+            return {
+                success: true,
+                message: res.data.message,
+            }
+        }
+
+
+        catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";
+            set({
+                error: message,
+            })
+            return {
+                success: false,
+                message,
+            }
+        } finally {
+            set({
+                loading: false,
+                loadingUsers: false,
+            });
+        }
+    },
 }));
 
 export default useUserStore;
