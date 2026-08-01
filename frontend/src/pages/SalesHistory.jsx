@@ -110,6 +110,11 @@ const updateSaleModal = (id) => {
   setMenuOpen(null);
 }
 
+// this function is used to update the sale and then refresh the sales list
+const fetchSales = () => {
+    getAllSales(page, limit, start, end, service, barber);
+};
+
   return (
     <Layout pageTitle="Sales History">
       <div className="space-y-6">
@@ -372,6 +377,8 @@ const updateSaleModal = (id) => {
             {/* <ViewSalesModal id={selectedSale} /> */}
             <UpdateSaleModal
               id={selectedSale}
+              onClose={() => setUpdateModal(false)}
+              refreshSales={fetchSales}
             />
           </Modal>
         )}

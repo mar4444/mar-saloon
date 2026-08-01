@@ -4,7 +4,7 @@ import useServiceStore from "../store/serviceStore";
 import usePaymentStore from "../store/paymentStore";
 import useUserStore from "../store/userStore";
 
-const UpdateSaleModal = ({ id }) => {
+const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
     const [formData, setFormData] = useState({
         barberId: "",
         serviceId: "",
@@ -21,7 +21,7 @@ const UpdateSaleModal = ({ id }) => {
         if (sale) {
             setFormData({
                 barberId: sale.barberId,
-                serviceId: sale.ServiceId,
+                serviceId: sale.serviceId,
                 paymentMethodId: sale.paymentMethodId,
                 paymentStatus: sale.paymentStatus,
             });
@@ -35,15 +35,27 @@ const UpdateSaleModal = ({ id }) => {
         getAllBarbersUsers()
     }, [])
 
+    // Get sale by ID for getting data to prefill the form
+    useEffect(() => {
+        getSaleById(id)
+    }, [id]);
+
+    // Update sale function
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const result = await updateSale(id, formData);
+
+        if (result) {
+            onClose();
+            refreshSales();
+        }
+    };
+
   return (
     <form 
         className="space-y-6"
-
-    //     onSubmit={(e) => {
-    //         e.preventDefault();
-    //         updateSale(id, formData);
-    //     }
-    // }
+        onSubmit={handleSubmit}
     >
 
       {/* Form Fields */}
@@ -60,7 +72,7 @@ const UpdateSaleModal = ({ id }) => {
           <select
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
             value={formData.barberId}
-            onChange={(e) => setFormData({ ...formData, barberId: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, barberId: Number(e.target.value) })}
           >
             {/* <option>Select Barber</option>
             <option>John Doe</option>
@@ -83,7 +95,7 @@ const UpdateSaleModal = ({ id }) => {
           <select
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
             value={formData.serviceId}
-            onChange={(e) => setFormData({ ...formData, serviceId: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, serviceId: Number(e.target.value) })}
           >
             {/* <option value="">Select Service</option>
             <option value="1">Hair Cut</option>
@@ -91,7 +103,7 @@ const UpdateSaleModal = ({ id }) => {
 
             {services.map((service) => (
                 <option key={service.id} value={service.id}>
-                {service.serviceName}
+                    {service.serviceName}
                 </option>
             ))}
           </select>
@@ -106,7 +118,7 @@ const UpdateSaleModal = ({ id }) => {
           <select
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
             value={formData.paymentMethodId}
-            onChange={(e) => setFormData({ ...formData, paymentMethodId: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, paymentMethodId: Number(e.target.value) })}
           >
             {/* <option>Select Payment Method</option>
             <option>Cash</option>
@@ -115,7 +127,7 @@ const UpdateSaleModal = ({ id }) => {
 
             {paymentMethods.map((paymentMethod) => (
                 <option key={paymentMethod.id} value={paymentMethod.id}>
-                {paymentMethod.paymentName}
+                    {paymentMethod.paymentName}
                 </option>
             ))}
           </select>
@@ -129,10 +141,12 @@ const UpdateSaleModal = ({ id }) => {
 
           <select
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200"
+            value={formData.paymentStatus}
+            onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
           >
-            <option>Select Status</option>
-            <option>PAID</option>
-            <option>PENDING</option>
+            {/* <option>Select Status</option> */}
+            <option value="PAID">PAID</option>
+            <option value="PENDING">PENDING</option>
           </select>
         </div>
 

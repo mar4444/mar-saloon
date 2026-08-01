@@ -72,6 +72,34 @@ const useSalesStore = create((set) => ({
             });
         }
     },
+
+    updateSale: async (id, data) => {
+        try {
+            set({
+                loading: true,
+                error: "",
+            })
+
+            const res = await api.put(`/api/update-sale/${id}`, data);
+
+            set({
+                sale: res.data.data,
+            })
+
+            return res.data.data;
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";
+
+            set({
+                error: message,
+            })
+        } finally {
+            set({
+                loading: false,
+            });
+        }
+
+    },
 }));
 
 export default useSalesStore;
