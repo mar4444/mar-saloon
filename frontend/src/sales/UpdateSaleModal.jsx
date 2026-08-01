@@ -3,6 +3,11 @@ import useSalesStore from "../store/salesStore";
 import useServiceStore from "../store/serviceStore";
 import usePaymentStore from "../store/paymentStore";
 import useUserStore from "../store/userStore";
+import {
+  Loader
+} from "lucide-react";
+import ErrorMessage from "../components/ErrorMessage";
+import { useToast } from "../context/ToastContext";
 
 const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
     const [formData, setFormData] = useState({
@@ -12,10 +17,11 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
         paymentStatus: "",
     });
 
-    const { sale, loading, error, getSaleById, updateSale } = useSalesStore();
+    const { sale, loading, error, getSaleById, updateSale, loadingButton } = useSalesStore();
     const { services, getAllServices } = useServiceStore();
     const { paymentMethods, getAllPaymentMethods } = usePaymentStore();
     const { users, getAllBarbersUsers } = useUserStore();
+    const { showToast } = useToast();
 
     useEffect(() => {
         if (sale) {
@@ -46,9 +52,12 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
 
         const result = await updateSale(id, formData);
 
-        if (result) {
+        if (result.success) {
             onClose();
+            showToast(result.message, "success");
             refreshSales();
+        } else {
+          showToast(result.message, "error");
         }
     };
 
@@ -63,6 +72,8 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
         className="grid grid-cols-1 md:grid-cols-2 gap-5"
       >   
 
+        {/* This is for displaying error message */}
+        {error && <ErrorMessage message={error} />}
         {/* Barber */}
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -153,20 +164,14 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-200 pt-6">
+      <div className="flex justify-end gap-3 border-t border-gray-200 pt-6">
 
         <button
-          type="button"
-          className="rounded-lg border border-gray-300 px-6 py-2.5 font-medium text-gray-700 transition hover:bg-gray-100 cursor-pointer"
-        >
-          Cancel
-        </button>
-
-        <button
+          disabled={loadingButton}
           type="submit"
           className="rounded-lg bg-green-600 px-6 py-2.5 font-medium text-white transition hover:bg-green-700 cursor-pointer"
         >
-          Update Sale
+          {loadingButton ? (<Loader size={22} className="animate-spin" />) : ('Update Sale')}
         </button>
 
       </div>

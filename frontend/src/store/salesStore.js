@@ -8,6 +8,7 @@ const useSalesStore = create((set) => ({
     loadingSales: false,
     totalPages: 1,
     sale: {},
+    loadingButton: false,
 
     getAllSales: async (page, limit, start, end, service, barber) => {
         try {
@@ -77,6 +78,7 @@ const useSalesStore = create((set) => ({
         try {
             set({
                 loading: true,
+                loadingButton: true,
                 error: "",
             })
 
@@ -86,15 +88,28 @@ const useSalesStore = create((set) => ({
                 sale: res.data.data,
             })
 
-            return res.data.data;
+        
+            // return true // for success remember this is for displaying error message inside toast
+            return {
+                success: true,
+                message: res.data.message,
+            }
+
         } catch (error) {
             const message = error.response?.data?.message || "Something went wrong";
 
             set({
                 error: message,
             })
+
+            // will display error when it's false!!
+            return {
+                success: false,
+                message,
+            }
         } finally {
             set({
+                loadingButton: false,
                 loading: false,
             });
         }
