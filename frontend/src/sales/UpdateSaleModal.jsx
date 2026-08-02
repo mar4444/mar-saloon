@@ -17,7 +17,7 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
         paymentStatus: "",
     });
 
-    const { sale, loading, error, getSaleById, updateSale, loadingButton } = useSalesStore();
+    const { sale, loading, errorUpdate, getSaleById, updateSale, loadingButton } = useSalesStore();
     const { services, getAllServices } = useServiceStore();
     const { paymentMethods, getAllPaymentMethods } = usePaymentStore();
     const { users, getAllBarbersUsers } = useUserStore();
@@ -73,7 +73,7 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
       >   
 
         {/* This is for displaying error message */}
-        {error && <ErrorMessage message={error} />}
+        {errorUpdate && <ErrorMessage message={error} />}
         {/* Barber */}
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-700">

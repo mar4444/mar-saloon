@@ -9,12 +9,15 @@ import { FiMoreVertical, FiSearch } from "react-icons/fi";
 import Modal from "../components/Modal";
 import ViewSalesModal from "../sales/ViewSalesModal";
 import UpdateSaleModal from "../sales/UpdateSaleModal";
+import ConfirmModal from "../components/ConfirmModal";
+import { useToast } from "../context/ToastContext";
 
 const SalesHistory = () => {
-  const { loading, error, sales, loadingSales, totalPages, getAllSales, updateSale } = useSalesStore();
+  const { loading, error, sales, loadingSales, totalPages, getAllSales, updateSale, deleteSale } = useSalesStore();
+  const { showToast } = useToast();
 
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(9);
   const [service, setService] = useState("")
   const [barber, setBarber] = useState("")
   const [start, setStart] = useState("")
@@ -28,6 +31,7 @@ const SalesHistory = () => {
 
   const [viewModal, setViewModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     getAllSales(page, limit, start, end, service, barber)
@@ -114,6 +118,25 @@ const updateSaleModal = (id) => {
 const fetchSales = () => {
     getAllSales(page, limit, start, end, service, barber);
 };
+
+const deleteSaleModal = (id) => {
+  setDeleteModal(true);
+  setSelectedSale(id);
+  setMenuOpen(null);
+}
+
+const handleDelete = async (productToDelete) => {
+
+  const deleteProduct = await deleteSale(productToDelete);
+
+  if (deleteProduct.success) {
+    setDeleteModal(false);
+    showToast(deleteProduct.message, "success");
+    fetchSales();
+  } else {
+    showToast(deleteProduct.message, "error");
+  }
+}
 
   return (
     <Layout pageTitle="Sales History">
@@ -331,6 +354,9 @@ const fetchSales = () => {
                           </button>
 
                           <button 
+                            onClick={() => {
+                              deleteSaleModal(sale.id)
+                            }}
                             className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"
                           >
                             Delete
@@ -381,6 +407,15 @@ const fetchSales = () => {
               refreshSales={fetchSales}
             />
           </Modal>
+        )}
+
+        {deleteModal && selectedSale && (
+          <ConfirmModal 
+            isOpen={deleteModal} 
+            productToDelete={selectedSale}
+            onConfirm={handleDelete}
+            onCancel={() => setDeleteModal(false)}
+          />
         )}
 
       </div>

@@ -4,6 +4,8 @@ import api from '../utils/api.js'
 const useSalesStore = create((set) => ({
     loading: false,
     error: "",
+    errorUpdate: false,
+    errorDelete: false,
     sales: [],
     loadingSales: false,
     totalPages: 1,
@@ -79,7 +81,7 @@ const useSalesStore = create((set) => ({
             set({
                 loading: true,
                 loadingButton: true,
-                error: "",
+                errorUpdate: "",
             })
 
             const res = await api.put(`/api/update-sale/${id}`, data);
@@ -99,7 +101,7 @@ const useSalesStore = create((set) => ({
             const message = error.response?.data?.message || "Something went wrong";
 
             set({
-                error: message,
+                errorUpdate: message,
             })
 
             // will display error when it's false!!
@@ -114,6 +116,39 @@ const useSalesStore = create((set) => ({
             });
         }
 
+    },
+
+    deleteSale: async (id) => {
+        try {
+            set({
+                loadingButton: true,
+                errorDelete: "",
+            })
+            const res = await api.delete(`/api/delete-sale/${id}`);
+
+            // set({
+            //     sale: {},
+            // })
+            return {
+                success: true,
+                message: res.data.message,
+            }
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";
+
+            set({
+                errorDelete: message,
+            })
+
+            return {
+                success: false,
+                message,
+            }
+        } finally {
+            set({
+                loadingButton: false,
+            });
+        }
     },
 }));
 
