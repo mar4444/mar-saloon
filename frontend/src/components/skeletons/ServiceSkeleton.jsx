@@ -1,6 +1,6 @@
 import React from "react";
 
-const SalesSkeleton = ({ rows = 6 }) => {
+const ServiceSkeleton = ({ rows = 6 }) => {
   return (
     <table className="min-w-[850px] w-full">
         <tbody className="animate-pulse">
@@ -23,16 +23,6 @@ const SalesSkeleton = ({ rows = 6 }) => {
                     <td className="p-4">
                         <div className="h-4 w-20 rounded bg-gray-200"></div>
                     </td>
-
-                    {/* Payment Status */}
-                    <td className="p-4">
-                        <div className="h-7 w-24 rounded-full bg-gray-200"></div>
-                    </td>
-
-                    {/* Created At */}
-                    <td className="p-4">
-                        <div className="h-4 w-40 rounded bg-gray-200"></div>
-                    </td>
                 </tr>
             ))}
         </tbody>
@@ -40,4 +30,4 @@ const SalesSkeleton = ({ rows = 6 }) => {
   );
 };
 
-export default SalesSkeleton;
+export default ServiceSkeleton;

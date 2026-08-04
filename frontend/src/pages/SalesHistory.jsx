@@ -281,24 +281,24 @@ const handleDelete = async (productToDelete) => {
               <tbody>
                 {loadingSales ? (
                   <tr>
-                  <td colSpan={5}>
-                    <SalesSkeleton rows={2} />
-                  </td>
-                </tr>
+                    <td colSpan={6}>
+                      <SalesSkeleton rows={2} />
+                    </td>
+                  </tr>
                 ) : error ? (
                   <tr>
-                  <td colSpan={5}>
+                  <td colSpan={6}>
                     <ErrorMessage message={error} />
                   </td>
                 </tr>
                 ) : sales.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className="py-16"
                     >
                       <NoDataFound
-                        title="No user found"
+                        title="No Sale found"
                         message="Try changing your search or filters."
                       />
                     </td>

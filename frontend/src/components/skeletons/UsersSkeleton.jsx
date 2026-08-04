@@ -9,7 +9,7 @@ const UsersSkeleton = () => {
         <table className="min-w-[850px] w-full border border-gray-100">
 
           {/* Table Header */}
-          <thead className="bg-green-50">
+          {/* <thead className="bg-green-50">
             <tr>
               {["", "", "", "", ""].map((_, index) => (
                 <th key={index} className="p-4">
@@ -17,12 +17,12 @@ const UsersSkeleton = () => {
                 </th>
               ))}
             </tr>
-          </thead>
+          </thead> */}
 
           {/* Table Body */}
           <tbody>
 
-            {Array.from({ length: 3 }).map((_, row) => (
+            {Array.from({ length: 2 }).map((_, row) => (
               <tr
                 key={row}
                 className="border-t border-gray-100"
