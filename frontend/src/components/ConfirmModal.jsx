@@ -1,3 +1,5 @@
+import { TriangleAlert, Loader } from "lucide-react";
+
 const ConfirmModal = ({
   isOpen,
   title = "Confirm Action",
@@ -14,7 +16,8 @@ const ConfirmModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
       <div className="w-full max-w-md rounded-xl bg-white shadow-xl">
-        <div className="border-b px-6 py-4">
+        <div className="flex items-center justify-start gap-2 border-b border-gray-200 bg-green-50 px-6 py-4">
+          <TriangleAlert />
           <h2 className="text-xl font-semibold text-gray-800">
             {title}
           </h2>
@@ -26,7 +29,7 @@ const ConfirmModal = ({
           </p>
         </div>
 
-        <div className="flex justify-end gap-3 border-t px-6 py-4">
+        <div className="flex justify-end gap-3 px-6 py-4">
           <button
             onClick={onCancel}
             disabled={loading}
@@ -40,7 +43,7 @@ const ConfirmModal = ({
             disabled={loading}
             className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:opacity-50 cursor-pointer"
           >
-            {loading ? "Please wait..." : confirmText}
+            {loading ? (<Loader size={22} className="animate-spin" />) : (confirmText)}
           </button>
         </div>
       </div>

@@ -13,7 +13,17 @@ import ConfirmModal from "../components/ConfirmModal";
 import { useToast } from "../context/ToastContext";
 
 const SalesHistory = () => {
-  const { loading, error, sales, loadingSales, totalPages, getAllSales, updateSale, deleteSale } = useSalesStore();
+  const { 
+    loading, 
+    error, 
+    sales, 
+    loadingSales, 
+    totalPages, 
+    getAllSales, 
+    updateSale, 
+    deleteSale,
+    loadingButton } = useSalesStore();
+
   const { showToast } = useToast();
 
   const [page, setPage] = useState(1)
@@ -339,7 +349,7 @@ const handleDelete = async (productToDelete) => {
                             onClick={() => {
                               openViewModal(sale.id)
                             }}
-                            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                            className="block w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
                           >
                             View Details
                           </button>
@@ -348,7 +358,7 @@ const handleDelete = async (productToDelete) => {
                             onClick={() => {
                               updateSaleModal(sale.id)
                             }}
-                            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                            className="block w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
                           >
                             Update
                           </button>
@@ -357,7 +367,7 @@ const handleDelete = async (productToDelete) => {
                             onClick={() => {
                               deleteSaleModal(sale.id)
                             }}
-                            className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50"
+                            className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 cursor-pointer"
                           >
                             Delete
                           </button>
@@ -415,6 +425,9 @@ const handleDelete = async (productToDelete) => {
             productToDelete={selectedSale}
             onConfirm={handleDelete}
             onCancel={() => setDeleteModal(false)}
+            loading={loadingButton}
+            message="Are you sure you want to delete Sale? This action cannot be undone."
+            confirmText="Delete"
           />
         )}
 

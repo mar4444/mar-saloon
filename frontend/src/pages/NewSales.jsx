@@ -1,8 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../layout/Layout";
-import { PackagePlus } from "lucide-react"
+import { PackagePlus, Loader } from "lucide-react"
+import useServiceStore from "../store/serviceStore";
+import useUserStore from "../store/userStore";
+import usePaymentStore from "../store/paymentStore";
+import { useToast } from "../context/ToastContext";
+import useSalesStore from "../store/salesStore";
+import { useNavigate } from "react-router-dom";
 
 const NewSales = () => {
+  const navigate = useNavigate();
+
+  const { services, getAllServices } = useServiceStore();
+  const { users, getAllBarbersUsers } = useUserStore();
+  const { paymentMethods, getAllPaymentMethods } = usePaymentStore();
+  const { showToast } = useToast();
+  const { sale, loading, errorUpdate, loadingButton, createSale } = useSalesStore();
+
+  const [formData, setFormData] = useState({
+    barberId: "",
+    serviceId: "",
+    paymentMethodId: "",
+    paymentStatus: "",
+  });
+
+  // Get services, Payments method and barbers
+  useEffect(() => {
+    getAllServices()
+    getAllPaymentMethods()
+    getAllBarbersUsers()
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const saleToCreate = await createSale(formData)
+
+    if(saleToCreate.success) {
+      showToast(saleToCreate.message, "success");
+      navigate("/sales-history");
+    } else {
+      showToast(saleToCreate.message, "error");
+    }
+  }
+
   return (
     <Layout pageTitle="New Sales">
       <div className="max-w-5xl mx-auto">
@@ -21,7 +62,10 @@ const NewSales = () => {
           </div>
 
           {/* Form */}
-          <form className="p-6">
+          <form 
+            onSubmit={handleSubmit}
+            className="p-6"
+          >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Barber */}
               <div>
@@ -29,8 +73,17 @@ const NewSales = () => {
                   Barber
                 </label>
 
-                <select className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <select 
+                  value={formData.barberId}
+                  onChange={(e) => setFormData({ ...formData, barberId: Number(e.target.value)})}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
                   <option value="">Select Barber</option>
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -40,8 +93,17 @@ const NewSales = () => {
                   Service
                 </label>
 
-                <select className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <select 
+                  value={formData.serviceId}
+                  onChange={(e) => setFormData({ ...formData, serviceId: Number(e.target.value) })}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
                   <option value="">Select Service</option>
+                  {services.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.serviceName}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -51,8 +113,17 @@ const NewSales = () => {
                   Payment Method
                 </label>
 
-                <select className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <select 
+                  value={formData.paymentMethodId}
+                  onChange={(e) => setFormData({ ...formData, paymentMethodId: Number(e.target.value) })}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
                   <option value="">Select Payment Method</option>
+                  {paymentMethods.map((paymentMethod) => (
+                    <option key={paymentMethod.id} value={paymentMethod.id}>
+                      {paymentMethod.paymentName}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -64,8 +135,11 @@ const NewSales = () => {
 
                 <select
                   defaultValue="PENDING"
+                  value={formData.paymentStatus}
+                  onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
                   className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
+                  <option value="">Payment Status</option>
                   <option value="PENDING">Pending</option>
                   <option value="PAID">Paid</option>
                 </select>
@@ -78,7 +152,7 @@ const NewSales = () => {
                 type="submit"
                 className="w-full lg:w-auto rounded-lg bg-green-600 px-8 py-3 font-medium cursor-pointer text-white transition hover:bg-green-700"
               >
-                Create Sale
+                {loadingButton ? (<Loader size={22} className="animate-spin" />) : ('Create Sale')}
               </button>
             </div>
           </form>

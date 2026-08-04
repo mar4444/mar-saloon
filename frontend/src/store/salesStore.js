@@ -150,6 +150,36 @@ const useSalesStore = create((set) => ({
             });
         }
     },
+
+    createSale: async (data) => {
+        try {
+            set({
+                loadingButton: true,
+                error: "",
+            })
+            const res = await api.post("/api/create-sale", data);
+
+            return {
+                success: true,
+                message: res.data.message,
+            }
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";
+
+            set({
+                error: message,
+            })
+
+            return {
+                success: false,
+                message,
+            }
+        } finally {
+            set({
+                loadingButton: false,
+            });
+        }
+    },
 }));
 
 export default useSalesStore;

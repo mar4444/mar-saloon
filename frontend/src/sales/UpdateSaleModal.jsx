@@ -90,9 +90,9 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
             <option>Martin</option> */}
 
             {users.map((user) => (
-                <option key={user.id} value={user.id}>
+              <option key={user.id} value={user.id}>
                 {user.name}
-                </option>
+              </option>
             ))}
           </select>
         </div>
