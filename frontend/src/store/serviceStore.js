@@ -5,6 +5,8 @@ const useServiceStore = create((set) => ({
   loadingButton: false,
   error: "",
   services: [],
+  service: {},
+  loadingUpdate: false,
   loadingServices: false,
 
     getAllServices: async () => {
@@ -20,7 +22,7 @@ const useServiceStore = create((set) => ({
                 services: res.data.data,
             })
         } catch (error) {
-            const message = error.response?.data?.message || "Something went wrong";
+            const message = error.response?.data?.message || "Something went wrong!";
 
             set({
                 error: message,
@@ -114,6 +116,40 @@ const useServiceStore = create((set) => ({
         } finally {
             set({
                 loadingButton: false,
+            })
+        }
+    },
+
+    getServiceById: async (id) => {
+        try {
+            set({   
+                loadingUpdate: true,
+                error: "",
+            })
+            const res = await api.get(`/api/serviceById/${id}`);
+
+            set({
+                service: res.data.data,
+            })
+
+            return {
+                success: true,
+                data: res.data.data,
+            }
+        } catch (error) {
+            const message = error.response?.data?.message || "Something went wrong";
+
+            set({
+                error: message,
+            })
+
+            return {
+                success: false,
+                message,
+            }
+        } finally {
+            set({
+                loadingUpdate: false,
             })
         }
     },

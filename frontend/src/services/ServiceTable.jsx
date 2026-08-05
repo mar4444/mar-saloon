@@ -4,15 +4,62 @@ import { useEffect, useState } from "react";
 import ServiceSkeleton from "../components/skeletons/ServiceSkeleton";
 import ErrorMessage from "../components/ErrorMessage";
 import NoDataFound from "../components/NoDataFound";
+import Modal from "../components/Modal";
+import ViewServiceDetails from "../serviceModals/ViewServiceDetails";
+import EditServiceModal from "../serviceModals/EditServiceModal";
+import AddServiceModal from "../serviceModals/AddServiceModal";
+import ConfirmModal from "../components/ConfirmModal";
+import { useToast } from "../context/ToastContext";
 
 const ServiceTable = () => {
-  const { services, error, getAllServices, loadingServices } = useServiceStore();
+  const { services, error, getAllServices, loadingServices, loadingButton, deleteService } = useServiceStore();
+  const { showToast } = useToast();
 
   const [menuOpen, setMenuOpen] = useState(null);
+  const [viewModal, setViewModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(null)
+  const [editModal, setEditModal] = useState(null)
+  const [addModal, setAddModal] = useState(null)
+  const [deleteModal, setDeleteModal] = useState(null)
 
   useEffect(() => {
     getAllServices();
   }, []);
+
+  const openViewModal = (id) => {
+    setViewModal(true);
+    setMenuOpen(false);
+    setSelectedService(id);
+  }
+
+  const openEditModal = (id) => {
+    setEditModal(true)
+    setMenuOpen(false);
+    setSelectedService(id);
+  }
+
+  const openAddModal = () => {
+    setAddModal(true)
+  }
+
+  const openDeleteModal = (id) => {
+    setDeleteModal(true);
+    setMenuOpen(false);
+    setSelectedService(id);
+  }
+
+  const handleDelete = async (serviceToDelete) => {
+
+  const deleteServiceHere = await deleteService(serviceToDelete);
+
+  if (deleteServiceHere.success) {
+    setDeleteModal(false);
+    showToast(deleteServiceHere.message, "success");
+    getAllServices();
+  } else {
+    showToast(deleteServiceHere.message, "error");
+  }
+}
 
   return (
     <div className="space-y-6">
@@ -31,6 +78,7 @@ const ServiceTable = () => {
           px-4
           py-2
           cursor-pointer"
+          onClick={() => openAddModal()}
         >
           <Plus size={18} />
           Add Service
@@ -58,11 +106,10 @@ const ServiceTable = () => {
             ) : error ? (
               <tr>
                 <td colSpan={6}>
-                  <SalesSkeleton rows={2} />
                   <ErrorMessage message={error} />
                 </td>
               </tr>
-            ) : services.lenght === 0 ? (
+            ) : services.length === 0 ? (
               <tr>
                 <td
                   colSpan={6}
@@ -103,7 +150,7 @@ const ServiceTable = () => {
 
                       <button 
                         onClick={() => {
-                          // openViewModal(service.id)
+                          openViewModal(service.id)
                         }}
                         className="block w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
                       >
@@ -112,7 +159,7 @@ const ServiceTable = () => {
 
                       <button 
                         onClick={() => {
-                          // updateSaleModal(sale.id)
+                          openEditModal(service.id)
                         }}
                         className="block w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
                       >
@@ -121,7 +168,7 @@ const ServiceTable = () => {
 
                       <button 
                         onClick={() => {
-                          // deleteSaleModal(sale.id)
+                          openDeleteModal(service.id)
                         }}
                         className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 cursor-pointer"
                       >
@@ -134,14 +181,52 @@ const ServiceTable = () => {
 
             ))
             )}
-
-            
-            
           </tbody>
         </table>
 
       </div>
+      
+      {viewModal && selectedService && (
+        <Modal
+          isOpen={viewModal} 
+          title="Service Details" 
+          onClose={() =>setViewModal(false)}
+        >
+          <ViewServiceDetails selectedService={selectedService} />
+        </Modal>
+      )}
 
+      {editModal && selectedService && (
+        <Modal
+          isOpen={editModal} 
+          title="Update Service" 
+          onClose={() =>setEditModal(false)}
+        >
+          <EditServiceModal selectedService={selectedService} onClose={() => setEditModal(false)} />
+        </Modal>
+      )}
+
+      {addModal && (
+        <Modal
+          isOpen={addModal} 
+          title="Add New Service" 
+          onClose={() =>setAddModal(false)}
+        >
+          <AddServiceModal onClose={() => setAddModal(false)} />
+        </Modal>
+      )}
+
+      {deleteModal && (
+        <ConfirmModal 
+          isOpen={deleteModal}
+          message="Are you sure you want to delete Service? This action cannot be undone."
+          onCancel={() => setDeleteModal(false)}
+          loading={loadingButton}
+          confirmText="Delete"
+          onConfirm={handleDelete}
+          productToDelete={selectedService}
+        />
+      )}
     </div>
   );
 };
