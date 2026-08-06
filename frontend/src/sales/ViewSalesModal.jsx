@@ -13,13 +13,7 @@ useEffect(() => {
 
   return (
     <div className="space-y-6">
-
-      
-
-      {/* Header */}
-
       {loading && 
-      
       <div className='py-2 grid grid-cols-1 md:grid-cols-2 gap-4 animate-pulse'>
         <div className='bg-gray-200 py-10 rounded-md'></div>
         <div className='bg-gray-200 py-10 rounded-md'></div>

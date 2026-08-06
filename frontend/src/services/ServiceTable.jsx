@@ -178,7 +178,6 @@ const ServiceTable = () => {
                   )}
                 </td>
               </tr>
-
             ))
             )}
           </tbody>

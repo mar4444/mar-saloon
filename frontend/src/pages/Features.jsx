@@ -11,7 +11,7 @@ const Features = () => {
       <div className="space-y-1">
 
         {/* Tabs */}
-        <div className="flex gap-2 rounded-md p-1.5 bg-green-100 w-1/3 overflow-x-auto">
+        <div className="flex gap-2 rounded-md p-1.5 bg-green-100 w-full md:w-1/3 overflow-x-auto">
           <button
             onClick={() => setTab("services")}
             className={`px-3 py-1 w-full rounded-md whitespace-nowrap transition cursor-pointer

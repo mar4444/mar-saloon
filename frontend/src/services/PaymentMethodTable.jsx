@@ -1,11 +1,66 @@
 import { MoreHorizontal, Plus } from "lucide-react";
-
-const data = [
-  { id: 1, name: "Cash" },
-  { id: 2, name: "Mobile Money" },
-];
+import usePaymentStore from "../store/paymentStore";
+import { useEffect, useState } from "react";
+import { useToast } from "../context/ToastContext";
+import ServiceSkeleton from "../components/skeletons/ServiceSkeleton";
+import ErrorMessage from "../components/ErrorMessage";
+import NoDataFound from "../components/NoDataFound";
+import Modal from "../components/Modal";
+import EditPaymentModal from "../paymentModals/EditPaymentModal";
+import ViewPaymentDetails from "../paymentModals/ViewPaymentDetails";
+import AddPaymentModal from "../paymentModals/AddPaymentModal";
+import ConfirmModal from "../components/ConfirmModal";
 
 const PaymentMethodTable = () => {
+  const { loadingPaymentMethods, error, paymentMethods, getAllPaymentMethods, deletePaymentMethod, loadingButton } = usePaymentStore();
+  const { showToast } = useToast();
+
+  const [menuOpen, setMenuOpen] = useState(null);
+  const [viewModal, setViewModal] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null)
+  const [editModal, setEditModal] = useState(null)
+  const [addModal, setAddModal] = useState(null)
+  const [deleteModal, setDeleteModal] = useState(null)
+
+  useEffect(() => {
+    getAllPaymentMethods();
+  }, []);
+
+  const openViewModal = (id) => {
+    setViewModal(true);
+    setMenuOpen(false);
+    setSelectedPayment(id);
+  }
+
+  const openEditModal = (id) => {
+    setEditModal(true)
+    setMenuOpen(false);
+    setSelectedPayment(id);
+  }
+
+  const openAddModal = () => {
+    setAddModal(true)
+  }
+
+  const openDeleteModal = (id) => {
+    setDeleteModal(true);
+    setMenuOpen(false);
+    setSelectedPayment(id);
+  }
+
+  const handleDelete = async (paymentToDelete) => {
+
+  const deletePaymentHere = await deletePaymentMethod(paymentToDelete);
+
+  if (deletePaymentHere.success) {
+    setDeleteModal(false);
+    showToast(deletePaymentHere.message, "success");
+    getAllPaymentMethods();
+  } else {
+    showToast(deletePaymentHere.message, "error");
+  }
+}
+
   return (
     <div className="space-y-6">
       <div className="space-y-1">
@@ -23,6 +78,7 @@ const PaymentMethodTable = () => {
           px-4
           py-2
           cursor-pointer"
+          onClick={() => openAddModal()}
         >
           <Plus size={18}/>
           Add Payment Method
@@ -43,25 +99,136 @@ const PaymentMethodTable = () => {
           </thead>
 
           <tbody>
-            {data.map((item) => (
+            {loadingPaymentMethods ? (
+              <tr>
+                <td colSpan={3}>
+                  <ServiceSkeleton rows={2} />
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan={6}>
+                  <ErrorMessage message={error} />
+                </td>
+              </tr>
+            ) : paymentMethods.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="py-16"
+                >
+                  <NoDataFound
+                    title="No Service found"
+                    message="Try changing your search or filters."
+                  />
+                </td>
+              </tr>
+            ) : (
+              paymentMethods.map((payment) => (
               <tr
-                key={item.id}
+                key={payment.id}
                 className="border-t border-gray-200 hover:bg-gray-50"
               >
                 <td className="p-3">
-                  {item.name}
+                  {payment.paymentName}
                 </td>
-                <td className="text-center">
-                  <button className="cursor-pointer">
+                <td className="relative p-3 text-center">
+                  {/* <button className="cursor-pointer">
+                    <MoreHorizontal size={18} />
+                  </button> */}
+
+                  <button
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setMenuOpen(
+                        menuOpen === payment.id ? null : payment.id
+                      )
+                    }
+                  >
                     <MoreHorizontal size={18} />
                   </button>
+                   
+                   {menuOpen === payment.id && (
+                    <div className="absolute right-10 top-12 z-50 w-40 rounded-lg border bg-white shadow-lg">
+
+                      <button 
+                        onClick={() => {
+                          openViewModal(payment.id)
+                        }}
+                        className="block w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
+                      >
+                        View Details
+                      </button>
+
+                      <button 
+                        onClick={() => {
+                          openEditModal(payment.id)
+                        }}
+                        className="block w-full px-4 py-2 text-left hover:bg-gray-100 cursor-pointer"
+                      >
+                        Update
+                      </button>
+
+                      <button 
+                        onClick={() => {
+                          openDeleteModal(payment.id)
+                        }}
+                        className="block w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 cursor-pointer"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>
 
+      
+      {viewModal && selectedPayment && (
+        <Modal
+          isOpen={viewModal} 
+          title="Payment status Details" 
+          onClose={() =>setViewModal(false)}
+        >
+          <ViewPaymentDetails selectedPayment={selectedPayment} />
+        </Modal>
+      )}
+
+      {editModal && selectedPayment && (
+        <Modal
+          isOpen={editModal} 
+          title="Update Payment status." 
+          onClose={() =>setEditModal(false)}
+        >
+          <EditPaymentModal selectedPayment={selectedPayment} onClose={() => setEditModal(false)} />
+        </Modal>
+      )}
+
+      {addModal && (
+        <Modal
+          isOpen={addModal} 
+          title="Add New Payment Status" 
+          onClose={() =>setAddModal(false)}
+        >
+          <AddPaymentModal onClose={() => setAddModal(false)} />
+        </Modal>
+      )}
+
+      {deleteModal && (
+        <ConfirmModal 
+          isOpen={deleteModal}
+          message="Are you sure you want to delete Payment status? This action cannot be undone."
+          onCancel={() => setDeleteModal(false)}
+          loading={loadingButton}
+          confirmText="Delete"
+          onConfirm={handleDelete}
+          productToDelete={selectedPayment}
+        />
+      )}
     </div>
   );
 };
