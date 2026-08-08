@@ -27,7 +27,7 @@ const SalesHistory = () => {
   const { showToast } = useToast();
 
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(9);
+  const [limit, setLimit] = useState(3);
   const [service, setService] = useState("")
   const [barber, setBarber] = useState("")
   const [start, setStart] = useState("")

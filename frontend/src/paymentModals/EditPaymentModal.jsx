@@ -40,8 +40,8 @@ const EditPaymentModal = ({ selectedPayment, onClose }) => {
     }
 
   return (
-    <div className='space-y-6'>
-        <div className='border-b border-gray-200 py-2'>
+    <div className='space-y-3'>
+        <div className='py-2'>
             <h1 className='font-semibold'>Edit Payment status</h1>
             <p className='text-sm text-gray-500'>Edit status of this completed payment.</p>
         </div>
