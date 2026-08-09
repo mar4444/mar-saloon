@@ -43,18 +43,19 @@ const SalesHistory = () => {
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
+  // remember this is useEffect is for displying all salas everytime page load!!
   useEffect(() => {
     getAllSales(page, limit, start, end, service, barber)
   }, [page, limit, start, end, service, barber]);
 
+
+// Remember those are functions for filtering day, yesterday, this week and month  
 const handleToday = () => {
   const today = new Date().toISOString().split("T")[0];
 
   setStart(today);
   setEnd(today);
   setPage(1);
-
-  console.log(today)
 };
 
 const handleYesterday = () => {
@@ -66,8 +67,6 @@ const handleYesterday = () => {
   setStart(date);
   setEnd(date);
   setPage(1);
-
-  console.log(date)
 };
 
 // This week sales
@@ -85,9 +84,6 @@ const handleThisWeek = () => {
     setEnd(endDate);
 
     setPage(1);
-
-    console.log(startDate)
-    console.log(endDate)
 };
 
 // This months sales
@@ -107,9 +103,6 @@ const handleThisMonth = () => {
     setEnd(endDate);
 
     setPage(1);
-
-    console.log(startDate)
-    console.log(endDate)
 };
 
 const openViewModal = (id) => {
@@ -135,9 +128,10 @@ const deleteSaleModal = (id) => {
   setMenuOpen(null);
 }
 
+// function to delete sale form zustand store function
 const handleDelete = async (productToDelete) => {
 
-  const deleteProduct = await deleteSale(productToDelete);
+  const deleteProduct = await deleteSale(productToDelete);  // deleteSale function from zustand
 
   if (deleteProduct.success) {
     setDeleteModal(false);
@@ -384,7 +378,7 @@ const handleDelete = async (productToDelete) => {
           </div>
 
           {/* Pagination */}
-          {sales.length > 0 && (
+          {sales.length > 0 && ( // This means sales from pagination sales greater than zero
             <Pagination
               page={page}
               totalPages={totalPages}
