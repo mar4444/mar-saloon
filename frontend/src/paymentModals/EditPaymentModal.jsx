@@ -59,14 +59,8 @@ const EditPaymentModal = ({ selectedPayment, onClose }) => {
                         placeholder='Enter Payment status Name'
                         className='w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200'
                     />
-                    {/* <input 
-                        type="text" 
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        placeholder='Enter Price'
-                        className='w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-200'
-                    /> */}
                 </div>
+                
                 <div className='flex items-center justify-end'>
                     <button 
                         disabled={loadingButton}

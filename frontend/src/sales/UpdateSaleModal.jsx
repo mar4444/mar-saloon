@@ -23,6 +23,7 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
     const { users, getAllBarbersUsers } = useUserStore();
     const { showToast } = useToast();
 
+    // Remember this will prefill Form's input so that user remember what to update!!!
     useEffect(() => {
         if (sale) {
             setFormData({
@@ -50,7 +51,7 @@ const UpdateSaleModal = ({ id, onClose, refreshSales }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const result = await updateSale(id, formData);
+        const result = await updateSale(id, formData); // this function is from zustand store!!!
 
         if (result.success) {
             onClose();

@@ -18,7 +18,7 @@ const Modal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-green-900/30 p-4">
 
       <div
         className={`w-full ${sizes[size]} bg-white rounded-xl shadow-xl animate-in fade-in zoom-in-95`}

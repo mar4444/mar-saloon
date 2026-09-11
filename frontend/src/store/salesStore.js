@@ -126,9 +126,6 @@ const useSalesStore = create((set) => ({
             })
             const res = await api.delete(`/api/delete-sale/${id}`);
 
-            // set({
-            //     sale: {},
-            // })
             return {
                 success: true,
                 message: res.data.message,

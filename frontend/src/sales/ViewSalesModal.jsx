@@ -8,7 +8,7 @@ const ViewSalesModal = ({ id }) => {
 const { sale, loading, error, getSaleById } = useSalesStore();
 
 useEffect(() => {
-    getSaleById(id)
+    getSaleById(id) // Remember this ID is passed from sales history page with by props
 }, [id])
 
   return (

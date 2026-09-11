@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { schema } from '../utils/schema.js'
 import useAuthStore from "../store/authStore";
-import api from '../utils/api.js'
 import { useToast } from "../context/ToastContext";
 import {
   Eye,
@@ -20,7 +19,6 @@ const Login = () => {
   const { showToast } = useToast();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const { loading, error, onSubmit } = useAuthStore();
 

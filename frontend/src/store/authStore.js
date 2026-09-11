@@ -13,7 +13,6 @@ const useAuthStore = create((set) => ({
             })
 
             const res = await api.post("/api/login", data);
-            console.log(res.data);
 
             sessionStorage.setItem("boardConnect", JSON.stringify(res.data));
 

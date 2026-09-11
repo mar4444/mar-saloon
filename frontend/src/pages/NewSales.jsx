@@ -149,6 +149,7 @@ const NewSales = () => {
             {/* Button */}
             <div className="mt-8 flex justify-end">
               <button
+                disabled={loadingButton}
                 type="submit"
                 className="w-full lg:w-auto rounded-lg bg-green-600 px-8 py-3 font-medium cursor-pointer text-white transition hover:bg-green-700"
               >

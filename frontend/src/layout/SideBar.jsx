@@ -31,7 +31,7 @@ const SideBar = ({ sidebarOpen, setSidebarOpen }) => {
     <>
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          className="fixed inset-0 bg-green-900/30 z-40 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
